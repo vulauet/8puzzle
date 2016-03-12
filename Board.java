@@ -1,5 +1,6 @@
 import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.StdOut;
 
 public class Board {
     // construct a board from an N-by-N array of blocks (where blocks[i][j] = block in row i, column j)
@@ -30,27 +31,29 @@ public class Board {
     // number of blocks out of place
     public int hamming() { 
         int score = 0;
-        for (int i=0; i<sizeSquare; i++) if (board[i] != i && board[i] != 0) score++;
+        for (int i=0; i<sizeSquare; i++) if (board[i] != i+1 && board[i] != 0) score++;
         return score;
     }                  
 
     // sum of Manhattan distances between blocks and goal
     public int manhattan() {
         int score = 0;
-        for (int i=0; i<sizeSquare; i++) if (board[i] != 0) score += Math.abs(board[i]/size - i/size) + Math.abs(board[i]%size - i%size);
+        for (int i=0; i<sizeSquare; i++) 
+			if (board[i] != 0) 
+				score += Math.abs((board[i]-1)/size - i/size) + Math.abs((board[i]-1)%size - i%size);
         return score;
     }                
 
     // is this board the goal board?
     public boolean isGoal() {
-        for (int i=0; i<sizeSquare; i++) if (board[i] != i+1) return false;
+        for (int i=0; i<sizeSquare; i++) if (board[i] != i+1 && board[i] != 0) return false;
         return true;
     }               
 
     // a board that is obtained by exchanging any pair of blocks
     public Board twin() {
         int[][] blocks = new int[size][size];
-        int index = findZero();
+        int index = 0;
         for (int i = 0; i<size; i++) {
             for (int j=0; j<size; j++ ) {
                 blocks[i][j] = board[i*size + j];
@@ -59,9 +62,11 @@ public class Board {
         }
         int i = 0;
         while (i == index || i+1 == index || (i+1)/size - i/size > 0) i++; 
+		// StdOut.println(i + ": " + blocks[i/size][i%size]);
+		// StdOut.println(i + 1 + ": " + blocks[i/size + 1][i%size]);
         int tmp = blocks[i/size][i%size];
-        blocks[i/size][i%size] = blocks[i/size + 1][i%size];
-        blocks[i/size + 1][i%size] = tmp;
+        blocks[i/size][i%size] = blocks[i/size][i%size+1];
+        blocks[i/size][i%size+1] = tmp;
         return new Board(blocks);
     }                   
 
@@ -71,6 +76,7 @@ public class Board {
         if (y == null) return false;
         if (y.getClass() != this.getClass()) return false;
         Board other = (Board) y;
+		if (dimension() != other.dimension()) return false;
         for (int i=0; i<sizeSquare; i++) if (board[i] != other.board[i]) return false;
         return true; 
     }       
@@ -91,9 +97,8 @@ public class Board {
     }    
 
     private int findZero() { 
-        int index = 0;
-        for (int i = 0; i<sizeSquare; i++) if (board[i] == 0) index = i; 
-        return index;
+        for (int i = 0; i<sizeSquare; i++) if (board[i] == 0) return i;
+		return -1;
     }
 
     private void copyBoard(int[] src, int[] des) { for (int i = 0; i<sizeSquare; i++) des[i] = src[i]; }
