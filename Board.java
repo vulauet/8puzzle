@@ -93,7 +93,7 @@ public class Board {
         if (valid(i, j-1)) nb.push(makeBoard(swap(board, zeroIndex, zeroIndex-1)));
         if (valid(i+1, j)) nb.push(makeBoard(swap(board, zeroIndex, zeroIndex+size)));
         if (valid(i-1, j)) nb.push(makeBoard(swap(board, zeroIndex, zeroIndex-size)));
-        return nb;
+		return nb;
     }    
 
     private int findZero() { 
@@ -108,9 +108,9 @@ public class Board {
     private int[] swap(int[] orig, int index1, int index2) {
         int[] newBoard = new int[sizeSquare];
         for (int i=0; i<sizeSquare; i++) newBoard[i] = orig[i];
-        int tmp = orig[index1];
-        orig[index1] = orig[index2];
-        orig[index2] = tmp;
+        int tmp = newBoard[index1];
+        newBoard[index1] = newBoard[index2];
+        newBoard[index2] = tmp;
         return newBoard;
     }
 
